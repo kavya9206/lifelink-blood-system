@@ -48,17 +48,18 @@ export default function BloodRequests() {
   const { data, user, addRequest, setRequestStatus, deleteRequest } = useApp();
   const [params] = useSearchParams();
 
-  const [form, setForm] = useState<FormState>({
+  const [form, setForm] = useState<FormState>(() => ({
     patientName: "",
     bloodGroup: (params.get("blood") as BloodGroup) || "",
     units: params.get("units") || "1",
     hospitalName: "",
     hospitalCity: params.get("city") || "",
     contact: user?.phone ?? "",
+    // eslint-disable-next-line react-hooks/purity -- one-time default for the date picker; value is seeded, not derived during render
     neededBy: new Date(Date.now() + 86400000).toISOString().slice(0, 10),
     urgency: "urgent",
     notes: "",
-  });
+  }));
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
   const [statusFilter, setStatusFilter] = useState<(typeof statusFilters)[number]>("all");
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);

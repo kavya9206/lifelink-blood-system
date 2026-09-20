@@ -1,7 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router";
 import { useApp } from "@/lib/store";
-import { CITIES } from "@/lib/types";
 import { EmptyState, PageWrap, Pill, Reveal, btnPrimary, btnSoft, inputCls } from "@/components/clay";
 import { Button } from "@/components/ui/button";
 import {

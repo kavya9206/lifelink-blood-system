@@ -1,7 +1,6 @@
 import { Link } from "react-router";
 import { PageWrap, Reveal, SectionHeading, btnPrimary, btnSoft } from "@/components/clay";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import {
   Building2,
   CalendarCheck2,

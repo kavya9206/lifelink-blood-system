@@ -7,7 +7,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { BLOOD_GROUPS, type BloodGroup, type BloodRequest, type Donor, type Hospital, type InventoryItem, type LifeLinkData, type RequestStatus, type UserAccount } from "./types";
+import { BLOOD_GROUPS, type BloodGroup, type BloodRequest, type Donor, type Hospital, type LifeLinkData, type RequestStatus, type UserAccount } from "./types";
 import { DEMO_PASSWORD, seedData } from "./seed";
 
 const DATA_KEY = "lifelink-demo-data-v1";

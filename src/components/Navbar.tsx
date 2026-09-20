@@ -32,7 +32,6 @@ export function Navbar() {
 
   const dashboardLabel =
     user?.role === "admin" || user?.role === "hospital" ? "Admin Dashboard" : "My Dashboard";
-  const dashboardTo = user?.role === "admin" || user?.role === "hospital" ? "/admin" : "/dashboard";
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-6">
