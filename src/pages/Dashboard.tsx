@@ -68,7 +68,7 @@ export default function Dashboard() {
     );
   }
 
-  const eligibleOn = nextEligibleDate(donor.lastDonation);
+  const eligibleOn = nextEligibleDate(donor.lastDonation) ?? new Date().toISOString().slice(0, 10);
   const daysLeft = daysUntil(eligibleOn);
   const canDonate = daysLeft <= 0;
   const livesHelped = donor.history.length * LIVES_PER_DONATION;
