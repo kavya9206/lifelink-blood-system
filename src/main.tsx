@@ -5,8 +5,6 @@ import { VlyToolbar } from "../vly-toolbar-readonly.tsx";
 import { AppProvider } from "@/lib/store";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { ConvexAuthProvider } from "@convex-dev/auth/react";
-import { ConvexReactClient } from "convex/react";
 import React, { StrictMode, useEffect, lazy, Suspense } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Outlet, Route, Routes, useLocation } from "react-router";
@@ -90,10 +88,6 @@ class RootErrorBoundary extends React.Component<
   }
 }
 
-const convex = new ConvexReactClient(import.meta.env.VITE_CONVEX_URL as string); /* Convex client for auth provider */
-
-
-
 /** LifeLink app shell — clay navbar + routed page + footer on every route. */
 function Layout() {
   return (
@@ -106,8 +100,6 @@ function Layout() {
     </div>
   );
 }
-
-
 
 function RouteSyncer() {
   const location = useLocation();
@@ -132,52 +124,49 @@ function RouteSyncer() {
   return null;
 }
 
-
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <RootErrorBoundary>
       <ToolbarErrorBoundary>
         <VlyToolbar />
       </ToolbarErrorBoundary>
-      <ConvexAuthProvider client={convex}>
-        <AppProvider>
-          <BrowserRouter>
-            <RouteSyncer />
-            <Suspense fallback={<RouteLoading />}>
-              <Routes>
-                <Route element={<Layout />}>
-                  <Route path="/" element={<Landing />} />
-                  <Route path="/find-blood" element={<FindBlood />} />
-                  <Route path="/donate" element={<DonateBlood />} />
-                  <Route path="/requests" element={<BloodRequests />} />
-                  <Route path="/blood-bank" element={<BloodBank />} />
-                  <Route path="/hospitals" element={<Hospitals />} />
-                  <Route path="/about" element={<About />} />
-                  <Route
-                    path="/dashboard"
-                    element={
-                      <RequireAuth>
-                        <Dashboard />
-                      </RequireAuth>
-                    }
-                  />
-                  <Route
-                    path="/admin"
-                    element={
-                      <RequireAuth roles={["admin", "hospital"]}>
-                        <AdminDashboard />
-                      </RequireAuth>
-                    }
-                  />
-                  <Route path="*" element={<NotFound />} />
-                </Route>
-                <Route path="/auth" element={<AuthPage redirectAfterAuth="/dashboard" />} />
-              </Routes>
-            </Suspense>
-          </BrowserRouter>
-          <Toaster />
-        </AppProvider>
-      </ConvexAuthProvider>
+      <AppProvider>
+        <BrowserRouter>
+          <RouteSyncer />
+          <Suspense fallback={<RouteLoading />}>
+            <Routes>
+              <Route element={<Layout />}>
+                <Route path="/" element={<Landing />} />
+                <Route path="/find-blood" element={<FindBlood />} />
+                <Route path="/donate" element={<DonateBlood />} />
+                <Route path="/requests" element={<BloodRequests />} />
+                <Route path="/blood-bank" element={<BloodBank />} />
+                <Route path="/hospitals" element={<Hospitals />} />
+                <Route path="/about" element={<About />} />
+                <Route
+                  path="/dashboard"
+                  element={
+                    <RequireAuth>
+                      <Dashboard />
+                    </RequireAuth>
+                  }
+                />
+                <Route
+                  path="/admin"
+                  element={
+                    <RequireAuth roles={["admin", "hospital"]}>
+                      <AdminDashboard />
+                    </RequireAuth>
+                  }
+                />
+                <Route path="*" element={<NotFound />} />
+              </Route>
+              <Route path="/auth" element={<AuthPage redirectAfterAuth="/dashboard" />} />
+            </Routes>
+          </Suspense>
+        </BrowserRouter>
+        <Toaster />
+      </AppProvider>
     </RootErrorBoundary>
   </StrictMode>,
 );
