@@ -1,0 +1,262 @@
+/* DO NOT CHANGE */
+@import "tailwindcss";
+@import "tw-animate-css";
+@custom-variant dark (&:is(.dark *));
+
+/* DO NOT CHANGE */
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+/* CHANGE VALUES FOR THEME — LifeLink Claymorphism (red / white / light gray) */
+:root {
+  --radius: 1.25rem;
+  --background: #f7f0ee;
+  --foreground: #352528;
+  --card: #fffdfc;
+  --card-foreground: #352528;
+  --popover: #fffdfc;
+  --popover-foreground: #352528;
+  --primary: #e5484d;
+  --primary-foreground: #ffffff;
+  --secondary: #f6e3de;
+  --secondary-foreground: #7c3a33;
+  --muted: #f3ebe8;
+  --muted-foreground: #8d7370;
+  --accent: #fbe4dd;
+  --accent-foreground: #a13434;
+  --destructive: #d93a3f;
+  --border: #f0e1dc;
+  --input: #f0e1dc;
+  --ring: #e5484d;
+  --chart-1: #e5484d;
+  --chart-2: #f97316;
+  --chart-3: #22c55e;
+  --chart-4: #eab308;
+  --chart-5: #a855f7;
+  --sidebar: #fffdfc;
+  --sidebar-foreground: #352528;
+  --sidebar-primary: #e5484d;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #fbe4dd;
+  --sidebar-accent-foreground: #a13434;
+  --sidebar-border: #f0e1dc;
+  --sidebar-ring: #e5484d;
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    background-image: radial-gradient(60rem 60rem at 110% -10%, #fbe4dd 0%, transparent 55%),
+      radial-gradient(50rem 50rem at -10% 110%, #f6e3de 0%, transparent 55%);
+    background-attachment: fixed;
+  }
+  button:not([disabled]),
+  [role="button"]:not([disabled]) {
+    cursor: pointer;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* LifeLink Claymorphism — plush, tactile, inflated surfaces            */
+/* ------------------------------------------------------------------ */
+@layer components {
+  /* Big puffy surface for cards & panels */
+  .clay-card {
+    border-radius: 2rem;
+    background: var(--card);
+    box-shadow:
+      0 24px 48px -20px rgba(146, 47, 47, 0.22),
+      0 6px 14px -8px rgba(146, 47, 47, 0.1),
+      inset 0 3px 4px rgba(255, 255, 255, 0.95),
+      inset 0 -10px 18px rgba(228, 168, 158, 0.28);
+  }
+
+  /* Softer, smaller clay tile for chips / small cards */
+  .clay-tile {
+    border-radius: 1.4rem;
+    background: var(--card);
+    box-shadow:
+      0 14px 28px -14px rgba(146, 47, 47, 0.2),
+      inset 0 2px 3px rgba(255, 255, 255, 0.9),
+      inset 0 -6px 12px rgba(228, 168, 158, 0.24);
+  }
+
+  /* Pastel tinted clay blob (hero orbs, icon wells) */
+  .clay-blob {
+    border-radius: 9999px;
+    background: linear-gradient(145deg, #ffe9e3, #fbd7cd);
+    box-shadow:
+      0 20px 36px -14px rgba(146, 47, 47, 0.25),
+      inset 0 4px 6px rgba(255, 255, 255, 0.9),
+      inset 0 -10px 18px rgba(228, 152, 138, 0.35);
+  }
+
+  /* Pressable clay button feel (apply on top of Button variants) */
+  .clay-btn {
+    border-radius: 1.1rem !important;
+    box-shadow:
+      0 12px 22px -10px rgba(163, 40, 40, 0.5),
+      0 3px 6px -2px rgba(163, 40, 40, 0.28),
+      inset 0 2px 3px rgba(255, 255, 255, 0.45),
+      inset 0 -5px 9px rgba(0, 0, 0, 0.16);
+    transition: transform 0.16s ease, box-shadow 0.16s ease;
+  }
+  .clay-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow:
+      0 16px 28px -10px rgba(163, 40, 40, 0.55),
+      0 4px 8px -2px rgba(163, 40, 40, 0.3),
+      inset 0 2px 3px rgba(255, 255, 255, 0.45),
+      inset 0 -5px 9px rgba(0, 0, 0, 0.16);
+  }
+  .clay-btn:active:not(:disabled) {
+    transform: translateY(1px);
+    box-shadow:
+      0 4px 10px -6px rgba(163, 40, 40, 0.5),
+      inset 0 4px 8px rgba(0, 0, 0, 0.22);
+  }
+
+  /* Neutral clay button (outline/secondary) */
+  .clay-btn-soft {
+    border-radius: 1.1rem !important;
+    box-shadow:
+      0 10px 20px -10px rgba(146, 47, 47, 0.28),
+      inset 0 2px 3px rgba(255, 255, 255, 0.85),
+      inset 0 -5px 9px rgba(228, 168, 158, 0.3);
+    transition: transform 0.16s ease, box-shadow 0.16s ease;
+  }
+  .clay-btn-soft:hover:not(:disabled) {
+    transform: translateY(-2px);
+  }
+  .clay-btn-soft:active:not(:disabled) {
+    transform: translateY(1px);
+    box-shadow: inset 0 4px 8px rgba(146, 47, 47, 0.18);
+  }
+
+  /* Pressed-in wells for inputs & selects */
+  .clay-inset {
+    background: #f6eae5;
+    border: none !important;
+    box-shadow:
+      inset 0 3px 6px rgba(146, 47, 47, 0.14),
+      inset 0 -1px 2px rgba(255, 255, 255, 0.85);
+  }
+  .clay-inset:focus-visible {
+    box-shadow:
+      inset 0 3px 6px rgba(146, 47, 47, 0.14),
+      0 0 0 3px rgba(229, 72, 77, 0.35);
+  }
+}
+
+@layer utilities {
+  @keyframes lifelink-floaty {
+    0%,
+    100% {
+      transform: translateY(0) rotate(-2deg);
+    }
+    50% {
+      transform: translateY(-14px) rotate(2deg);
+    }
+  }
+  .animate-floaty {
+    animation: lifelink-floaty 6s ease-in-out infinite;
+  }
+  .animate-floaty-slow {
+    animation: lifelink-floaty 9s ease-in-out infinite;
+  }
+  @keyframes lifelink-pulse {
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.06);
+      opacity: 0.85;
+    }
+  }
+  .animate-heartbeat {
+    animation: lifelink-pulse 2.4s ease-in-out infinite;
+  }
+  .text-gradient-red {
+    background: linear-gradient(120deg, #e5484d 20%, #f0716b 60%, #e5484d 90%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
