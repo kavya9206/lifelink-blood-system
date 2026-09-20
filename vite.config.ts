@@ -72,8 +72,6 @@ export default defineConfig({
     target: 'esnext',
     // Minify options - using esbuild (faster than terser)
     minify: 'esbuild',
-    // Leave the Vite HTML transform in place so the app shell still works
-    // client-side; GitHub Pages hosts the prerendered HTML plus the SPA bundle.
   },
   // Optimize dependencies
   optimizeDeps: {
@@ -99,11 +97,5 @@ export default defineConfig({
     hmr: {
       overlay: false,
     },
-  },
-  // Static export build artifacts for GitHub Pages + Pagefind indexing.
-  // This runs only inside the static-deploy helper, not during normal dev.
-  experimental: {
-    // Keep Vite happy while we prerender the app for static hosting.
-    renderBuiltUrl: (filename) => ({ path: filename }),
   },
 });

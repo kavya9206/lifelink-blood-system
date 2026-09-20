@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { FormEvent, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router";
 import { useApp, DEMO_PASSWORD } from "@/lib/store";
 import { Field, LifeLinkLogo, btnPrimary, btnSoft, inputCls } from "@/components/clay";
@@ -54,7 +54,7 @@ export default function AuthPage({ redirectAfterAuth }: { redirectAfterAuth?: st
     navigate(returnTo ?? redirectAfterAuth ?? defaultRoute(role), { replace: true });
   };
 
-  const submitLogin = (e: FormEvent) => {
+  const submitLogin = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const errs: Record<string, string> = {};
     if (!/^\S+@\S+\.\S+$/.test(loginForm.email.trim())) errs.email = "Enter a valid email.";
@@ -77,7 +77,7 @@ export default function AuthPage({ redirectAfterAuth }: { redirectAfterAuth?: st
     go(role);
   };
 
-  const submitRegister = (e: FormEvent) => {
+  const submitRegister = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const errs: Record<string, string> = {};
     if (regForm.name.trim().length < 3) errs.name = "Enter your full name.";
@@ -253,7 +253,7 @@ export default function AuthPage({ redirectAfterAuth }: { redirectAfterAuth?: st
                   { v: "donor", label: "Donor", icon: <Droplet className="size-4" /> },
                   { v: "recipient", label: "Recipient", icon: <UserRound className="size-4" /> },
                   { v: "hospital", label: "Hospital", icon: <Building2 className="size-4" /> },
-                ] as { v: Role; label: string; icon: ReactNode }[]).map((o) => (
+                ] as { v: Role; label: string; icon: JSX.Element }[]).map((o) => (
                   <button
                     type="button"
                     key={o.v}
