@@ -55,7 +55,6 @@ export default function BloodRequests() {
     hospitalName: "",
     hospitalCity: params.get("city") || "",
     contact: user?.phone ?? "",
-    // eslint-disable-next-line react-hooks/purity -- one-time default for the date picker; value is seeded, not derived during render
     neededBy: new Date(Date.now() + 86400000).toISOString().slice(0, 10),
     urgency: "urgent",
     notes: "",
