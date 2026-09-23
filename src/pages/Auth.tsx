@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, ReactNode, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router";
 import { useApp, DEMO_PASSWORD } from "@/lib/store";
 import { Field, LifeLinkLogo, btnPrimary, btnSoft, inputCls } from "@/components/clay";
@@ -253,7 +253,7 @@ export default function AuthPage({ redirectAfterAuth }: { redirectAfterAuth?: st
                   { v: "donor", label: "Donor", icon: <Droplet className="size-4" /> },
                   { v: "recipient", label: "Recipient", icon: <UserRound className="size-4" /> },
                   { v: "hospital", label: "Hospital", icon: <Building2 className="size-4" /> },
-                ] as { v: Role; label: string; icon: JSX.Element }[]).map((o) => (
+                ] as { v: Role; label: string; icon: ReactNode }[]).map((o) => (
                   <button
                     type="button"
                     key={o.v}
