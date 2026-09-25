@@ -1,4 +1,22 @@
-.env.local
-node_modules
-dist
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Environment files (never commit secrets)
+.env
+.env.*
+!.env.example
+
+# Python virtualenv & bytecode cache
+server/.venv/
+__pycache__/
+*.pyc
+
+# Editor / OS
+.vscode/
+.DS_Store
+
+# Platform-generated Convex artifacts (auto-regenerated, not source)
 src/convex/_generated
