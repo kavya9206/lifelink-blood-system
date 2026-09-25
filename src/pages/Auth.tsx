@@ -17,6 +17,7 @@ import {
   UserRound,
 } from "lucide-react";
 import { toast } from "sonner";
+import { isApiMode, apiLogin, apiRegister } from "@/lib/api";
 
 type Mode = "login" | "register";
 type Role = "donor" | "recipient" | "hospital";
@@ -35,6 +36,7 @@ export default function AuthPage({ redirectAfterAuth }: { redirectAfterAuth?: st
 
   const [mode, setMode] = useState<Mode>(params.get("mode") === "register" ? "register" : "login");
   const [showPassword, setShowPassword] = useState(false);
+  const [busy, setBusy] = useState(false);
 
   const [loginForm, setLoginForm] = useState({ email: "", password: "", remember: true });
   const [loginErrors, setLoginErrors] = useState<Record<string, string>>({});
@@ -49,18 +51,44 @@ export default function AuthPage({ redirectAfterAuth }: { redirectAfterAuth?: st
   });
   const [regErrors, setRegErrors] = useState<Record<string, string>>({});
 
+  const apiMode = isApiMode;
+
   const go = (role: string) => {
     const returnTo = params.get("returnTo");
     navigate(returnTo ?? redirectAfterAuth ?? defaultRoute(role), { replace: true });
   };
 
-  const submitLogin = (e: FormEvent<HTMLFormElement>) => {
+  const submitLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const errs: Record<string, string> = {};
     if (!/^\S+@\S+\.\S+$/.test(loginForm.email.trim())) errs.email = "Enter a valid email.";
     if (loginForm.password.length < 6) errs.password = "Password must be at least 6 characters.";
     setLoginErrors(errs);
     if (Object.keys(errs).length) return;
+
+    // Flask + Supabase mode
+    if (apiMode) {
+      setBusy(true);
+      try {
+        const res = await apiLogin(loginForm.email.trim(), loginForm.password);
+        toast.success(`Welcome back, ${res.user.name || res.user.email}!`);
+        go(res.user.role);
+        return;
+      } catch (err: unknown) {
+        const msg = err instanceof Error ? err.message : "Login failed.";
+        // if backend not reachable, fall through to demo message
+        if (/not configured|Failed to fetch|NetworkError/i.test(msg)) {
+          toast.error("Backend not reachable — check Flask server is running (http://localhost:5000). Falling back to demo mode for preview.");
+        } else {
+          toast.error(msg);
+          return;
+        }
+      } finally {
+        setBusy(false);
+      }
+    }
+
+    // Demo localStorage mode (always available, so preview never goes white)
     const err = login(loginForm.email, loginForm.password, loginForm.remember);
     if (err) {
       toast.error(err);
@@ -77,7 +105,7 @@ export default function AuthPage({ redirectAfterAuth }: { redirectAfterAuth?: st
     go(role);
   };
 
-  const submitRegister = (e: FormEvent<HTMLFormElement>) => {
+  const submitRegister = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const errs: Record<string, string> = {};
     if (regForm.name.trim().length < 3) errs.name = "Enter your full name.";
@@ -87,6 +115,33 @@ export default function AuthPage({ redirectAfterAuth }: { redirectAfterAuth?: st
     if (regForm.confirm !== regForm.password) errs.confirm = "Passwords do not match.";
     setRegErrors(errs);
     if (Object.keys(errs).length) return;
+
+    if (apiMode) {
+      setBusy(true);
+      try {
+        const res = await apiRegister({
+          name: regForm.name.trim(),
+          email: regForm.email.trim(),
+          phone: regForm.phone.trim(),
+          password: regForm.password,
+          role: regForm.role,
+        });
+        toast.success(`Account created — welcome, ${(res.user.name || regForm.name).split(" ")[0]}!`);
+        go(res.user.role || regForm.role);
+        return;
+      } catch (err: unknown) {
+        const msg = err instanceof Error ? err.message : "Registration failed.";
+        if (/not configured|Failed to fetch|NetworkError/i.test(msg)) {
+          toast.error("Backend not reachable — using demo mode for preview. Register again once Flask is running.");
+        } else {
+          toast.error(msg);
+          return;
+        }
+      } finally {
+        setBusy(false);
+      }
+    }
+
     const err = register({
       name: regForm.name,
       email: regForm.email,
@@ -128,6 +183,11 @@ export default function AuthPage({ redirectAfterAuth }: { redirectAfterAuth?: st
             </div>
           ))}
         </div>
+        {apiMode && (
+          <p className="mt-6 max-w-md rounded-2xl bg-emerald-50 px-4 py-3 text-xs font-semibold leading-relaxed text-emerald-800 ring-1 ring-emerald-200">
+            ✓ Flask + Supabase connected — auth and data are live.
+          </p>
+        )}
       </div>
 
       {/* Form card */}
@@ -135,6 +195,15 @@ export default function AuthPage({ redirectAfterAuth }: { redirectAfterAuth?: st
         <div className="mb-6 flex justify-center lg:hidden">
           <LifeLinkLogo />
         </div>
+        {apiMode ? (
+          <p className="mb-4 rounded-xl bg-emerald-50 px-3 py-2 text-center text-xs font-bold text-emerald-700 ring-1 ring-emerald-200">
+            Flask + Supabase mode — real accounts
+          </p>
+        ) : (
+          <p className="mb-4 rounded-xl bg-amber-50 px-3 py-2 text-center text-xs font-semibold text-amber-800 ring-1 ring-amber-200">
+            Demo mode — set <code className="rounded bg-white px-1 py-0.5">VITE_API_URL</code> to switch to Flask + Supabase
+          </p>
+        )}
 
         {/* Mode switch */}
         <div className="clay-inset mb-7 grid grid-cols-2 gap-1 rounded-2xl p-1.5">
@@ -193,13 +262,13 @@ export default function AuthPage({ redirectAfterAuth }: { redirectAfterAuth?: st
               <button
                 type="button"
                 className="font-bold text-primary hover:underline"
-                onClick={() => toast.info("This is a demo — use any listed demo account (password: demo1234).")}
+                onClick={() => toast.info(apiMode ? "Use the account you registered, or the demo accounts after seeding Supabase Auth." : "This is a demo — use any listed demo account (password: demo1234).")}
               >
                 Forgot password?
               </button>
             </div>
-            <Button size="lg" className={btnPrimary}>
-              <LogIn className="size-5" /> Login
+            <Button size="lg" className={btnPrimary} disabled={busy}>
+              <LogIn className="size-5" /> {busy ? "Please wait…" : "Login"}
             </Button>
             <p className="text-center text-sm text-muted-foreground">
               New to LifeLink?{" "}
@@ -270,8 +339,8 @@ export default function AuthPage({ redirectAfterAuth }: { redirectAfterAuth?: st
                 ))}
               </div>
             </Field>
-            <Button size="lg" className={btnPrimary}>
-              <UserPlus className="size-5" /> Create account
+            <Button size="lg" className={btnPrimary} disabled={busy}>
+              <UserPlus className="size-5" /> {busy ? "Creating…" : "Create account"}
             </Button>
             <p className="text-center text-sm text-muted-foreground">
               Already registered?{" "}

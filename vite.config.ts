@@ -93,6 +93,13 @@ export default defineConfig({
     // Bind to all interfaces so WebContainer's server-ready event fires.
     host: true,
     port: 5173,
+    // Proxy /api to Flask when VITE_API_URL points to localhost:5000 during dev.
+    proxy: {
+      "/api": {
+        target: process.env.VITE_API_URL || "http://localhost:5000",
+        changeOrigin: true,
+      },
+    },
     // Keep HMR on, but disable full-screen error overlay
     hmr: {
       overlay: false,

@@ -14,6 +14,7 @@ import {
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { HeartPulse, LayoutDashboard, LogOut, Menu, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { apiLogout, isApiMode } from "@/lib/api";
 
 export const NAV_LINKS = [
   { to: "/", label: "Home" },
@@ -95,6 +96,7 @@ export function Navbar() {
                 <DropdownMenuItem
                   className="rounded-xl text-destructive"
                   onClick={() => {
+                    if (isApiMode) apiLogout();
                     logout();
                     navigate("/");
                   }}
@@ -165,6 +167,7 @@ export function Navbar() {
                   className={cn(btnSoft, "mt-6 font-bold text-destructive")}
                   onClick={() => {
                     setOpen(false);
+                    if (isApiMode) apiLogout();
                     logout();
                     navigate("/");
                   }}
