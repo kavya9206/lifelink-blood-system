@@ -54,9 +54,16 @@ export default function AdminDashboard() {
   const fetchUsers = async () => { if (!isApi) return; try { const r = await apiListUsers(); setApiUsers((r.users ?? []).map(mapUserRow)); } catch (e) { /* forbidden for non-admin — silent */ } };
   const fetchStats = async () => { if (!isApi) return; try { const s = await apiStats(); setApiStatTotals(s); } catch { /* silent */ } };
 
+  // Initial load — each fetch resolves into state inside a .then() callback
+  // (never synchronously in the effect body) so no render cascade occurs.
   useEffect(() => {
     if (!isApi) return;
-    fetchDonors(); fetchInventory(); fetchRequests(); fetchHospitals(); fetchUsers(); fetchStats();
+    apiListDonors().then((r) => setApiDonors((r.donors ?? []).map(mapDonorRow))).catch((e) => toast.error(e instanceof Error ? e.message : String(e)));
+    apiListInventory().then((r) => setApiInventory((r.inventory ?? []).map(mapInventoryRow))).catch((e) => toast.error(e instanceof Error ? e.message : String(e)));
+    apiListRequests().then((r) => setApiRequests((r.requests ?? []).map(mapRequestRow))).catch((e) => toast.error(e instanceof Error ? e.message : String(e)));
+    apiListHospitals().then((r) => setApiHospitals((r.hospitals ?? []).map(mapHospitalRow))).catch((e) => toast.error(e instanceof Error ? e.message : String(e)));
+    apiListUsers().then((r) => setApiUsers((r.users ?? []).map(mapUserRow))).catch(() => { /* forbidden for non-admin — silent */ });
+    apiStats().then((s) => setApiStatTotals(s)).catch(() => { /* silent */ });
   }, []);
 
   const donorsSource = isApi && apiDonors ? apiDonors : data.donors;

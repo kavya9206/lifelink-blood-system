@@ -38,8 +38,13 @@ export default function Hospitals() {
     }
   };
 
+  // Initial load — state updates live inside the .then() callback (never
+  // synchronously in the effect body).
   useEffect(() => {
-    if (isApiMode) fetchHospitals({});
+    if (!isApiMode) return;
+    apiListHospitals()
+      .then((res) => setApiHospitals((res.hospitals ?? []).map(mapHospitalRow)))
+      .catch((e) => setApiError(e instanceof Error ? e.message : String(e)));
   }, []);
 
   // Debounced search in API mode

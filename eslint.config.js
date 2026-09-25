@@ -10,7 +10,8 @@ export default [
     ...js.configs.recommended,
     files: ["**/*.{js,jsx}"],
     languageOptions: {
-      ecmaVersion: 2020,
+      ecmaVersion: "latest",
+      sourceType: "module",
       globals: globals.browser,
       parserOptions: {
         ecmaFeatures: { jsx: true },

@@ -48,7 +48,9 @@ function Carousel({ orientation = "horizontal", opts, setApi, plugins, className
     React.useEffect(() => {
         if (!api)
             return;
-        onSelect(api);
+        // Sync initial selection inside a microtask so the effect body
+        // never calls setState synchronously.
+        Promise.resolve().then(() => onSelect(api));
         api.on("reInit", onSelect);
         api.on("select", onSelect);
         return () => {

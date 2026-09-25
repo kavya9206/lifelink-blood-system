@@ -35,8 +35,24 @@ export default function BloodBank() {
     }
   };
 
+  // Initial load — state updates live inside the .then() callback (never
+  // synchronously in the effect body), with cancellation on unmount.
   useEffect(() => {
-    if (isApiMode) fetchInventory("all");
+    if (!isApiMode) return;
+    let cancelled = false;
+    apiListInventory()
+      .then((res) => {
+        if (cancelled) return;
+        setApiInventory((res.inventory ?? []).map(mapInventoryRow));
+        setApiTotals(res.totals ?? null);
+        setApiUnits(res.units_total ?? null);
+      })
+      .catch(() => {
+        // silent — keep showing cached / demo data
+      });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const inventory = isApiMode && apiInventory ? apiInventory : data.inventory;

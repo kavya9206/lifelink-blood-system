@@ -61,8 +61,13 @@ export default function BloodRequests() {
     }
   };
 
+  // Initial load — state updates live inside the .then() callback (never
+  // synchronously in the effect body).
   useEffect(() => {
-    if (isApiMode) fetchRequests();
+    if (!isApiMode) return;
+    apiListRequests()
+      .then((res) => setApiRequests((res.requests ?? []).map(mapRequestRow)))
+      .catch((e) => toast.error(e instanceof Error ? e.message : String(e)));
   }, []);
 
   const requests = isApiMode && apiRequests ? apiRequests : data.requests;

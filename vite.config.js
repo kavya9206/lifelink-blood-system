@@ -23,7 +23,6 @@ export default defineConfig({
       output: {
         manualChunks: {
           "react-vendor": ["react", "react-dom", "react-router"],
-          "convex-vendor": ["convex"],
           "radix-ui": [
             "@radix-ui/react-accordion",
             "@radix-ui/react-alert-dialog",
@@ -71,7 +70,6 @@ export default defineConfig({
       "react-dom",
       "react-dom/client",
       "react-router",
-      "@convex-dev/auth/react",
       "framer-motion",
     ],
   },

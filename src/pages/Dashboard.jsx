@@ -28,7 +28,15 @@ export default function Dashboard() {
       setApiHistory(res.history ?? []);
     } catch { /* silent — fall back to store history */ }
   };
-  useEffect(() => { if (isApiMode && donor) fetchHistory(); }, [donor?.id]);
+  // Initial history load — state updates inside .then() (not the effect body).
+  useEffect(() => {
+    if (!isApiMode || !donor) return;
+    apiDonorHistory(donor.id)
+      .then((res) => setApiHistory(res.history ?? []))
+      .catch(() => {
+        /* silent — fall back to store history */
+      });
+  }, [donor?.id]);
 
   const history = (isApiMode && apiHistory) ? apiHistory : (donor?.history ?? []);
   const lastDonation = history.length ? history[0].date : (donor?.lastDonation ?? null);
