@@ -1,9 +1,10 @@
 name: Deploy LifeLink to GitHub Pages
 
 on:
-  push:
-    branches: ["main"]
   workflow_dispatch:
+  # push disabled — full-stack deploy is separate, not Pages
+  # push:
+  #   branches: ["main"]
 
 permissions:
   contents: read
