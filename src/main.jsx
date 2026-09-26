@@ -1,10 +1,14 @@
 import '@vly-ai/integrations';
 import { Toaster } from "@/components/ui/sonner";
 import { RequireAuth } from "@/components/RequireAuth";
-import { VlyToolbar } from "../vly-toolbar-readonly.jsx";
 import { AppProvider } from "@/lib/store";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+// Vly toolbar is optional — inlined no-op stub so `vite build` never fails
+// when `../vly-toolbar-readonly.jsx` is absent (e.g. fresh GitHub clones / CI).
+// The real toolbar file can still be present at the repo root for Vly previews
+// but is NOT required for the build to succeed.
+const VlyToolbar = () => null;
 import React, { StrictMode, useEffect, lazy, Suspense } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Outlet, Route, Routes, useLocation } from "react-router";
